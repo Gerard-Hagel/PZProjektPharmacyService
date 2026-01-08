@@ -6,7 +6,6 @@
     
 <template>
   <div class="min-h-screen bg-gray-100 flex flex-col w-full">
-    <!-- Pasek nawigacyjny -->
     <nav class="bg-purple-200 p-4 flex w-full justify-between items-center">
       <div class="flex space-x-4">
         <button class="font-semibold">Leki</button>
