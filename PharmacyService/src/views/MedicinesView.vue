@@ -10,40 +10,48 @@
         <div
           v-for="medicine in medicines"
           :key="medicine.id"
-          class="flex justify-between items-center px-6 py-4 border-t border-gray-400">
+          class="flex justify-between items-center px-6 py-4 border-t border-gray-400"
+        >
           <div class="leading-tight">
             <p class="font-semibold">
-              {{ medicine.name }} / ID {{ medicine.id }}
+              {{ medicine.nazwa }} / ID {{ medicine.id }}
             </p>
             <p
               class="text-sm font-semibold"
-              :class="medicine.refunded ? 'text-green-600' : 'text-red-600'">
-              {{ medicine.refunded ? 'Refundowany' : 'Nierefundowany' }}
+              :class="medicine.refundacja ? 'text-green-600' : 'text-red-600'">
+              {{ medicine.refundacja ? 'Refundowany' : 'Nierefundowany' }}
             </p>
             <p class="text-sm text-gray-700">
-              Ilość: {{ medicine.quantity }}
+              Ilość: {{ medicine.stan_w_magazynie }}
             </p>
           </div>
 
           <div class="flex space-x-3">
             <button
               @click="increase(medicine)"
-              class="w-9 h-9 bg-green-400 text-green-400 rounded-lg flex items-center justify-center text-xl font-bold">
+              class="w-9 h-9 bg-green-400 text-green-400 rounded-lg flex items-center justify-center text-xl font-bold"
+            >
               +
             </button>
 
             <button
               @click="decrease(medicine)"
-              class="w-9 h-9 bg-red-400 text-red-400 rounded-lg flex items-center justify-center text-xl font-bold">
+              class="w-9 h-9 bg-red-400 text-red-400 rounded-lg flex items-center justify-center text-xl font-bold"
+            >
               -
             </button>
 
             <button
-              class="w-9 h-9 bg-sky-400 text-blue-400 rounded-lg flex items-center justify-center font-bold text-lg">
+              class="w-9 h-9 bg-sky-400 text-blue-400 rounded-lg flex items-center justify-center font-bold text-lg"
+              @click="viewDetails(medicine.id)"
+            >
               i
             </button>
           </div>
         </div>
+
+        <p v-if="loading" class="text-center py-4">Ładowanie leków...</p>
+        <p v-if="error" class="text-center py-4 text-red-500">{{ error }}</p>
 
       </div>
     </main>
@@ -51,26 +59,49 @@
 </template>
 
 <script>
+import api from "@/api/axios";
+
 export default {
   name: "MedicinesView",
   data() {
     return {
-      medicines: [
-        { id: 1, name: "Paracetamol", refunded: true, quantity: 12 },
-        { id: 2, name: "Ibuprofen", refunded: false, quantity: 7 },
-        { id: 3, name: "Aspiryna", refunded: true, quantity: 20 },
-        { id: 4, name: "Amoxicylina", refunded: false, quantity: 5 },
-      ],
+      medicines: [],
+      loading: false,
+      error: "",
     };
   },
+  async mounted() {
+    await this.fetchMedicines();
+  },
   methods: {
+    async fetchMedicines() {
+      this.loading = true;
+      this.error = "";
+
+      try {
+        const response = await api.get("/api/leki");
+        this.medicines = response.data;
+      } catch (err) {
+        if (err.response?.status === 401) {
+          this.error = "Brak autoryzacji – zaloguj się ponownie";
+          this.$router.push("/login");
+        } else {
+          this.error = "Nie udało się pobrać listy leków";
+        }
+      } finally {
+        this.loading = false;
+      }
+    },
     increase(medicine) {
-      medicine.quantity++;
+      medicine.stan_w_magazynie++;
     },
     decrease(medicine) {
-      if (medicine.quantity > 0) {
-        medicine.quantity--;
+      if (medicine.stan_w_magazynie > 0) {
+        medicine.stan_w_magazynie--;
       }
+    },
+    viewDetails(id) {
+      this.$router.push(`/medicines/${id}`);
     },
   },
 };

@@ -4,34 +4,38 @@
       <div class="w-full max-w-md border border-gray-400 rounded-xl overflow-hidden shadow-md">
 
         <div class="bg-purple-300 text-white text-center text-xl font-bold py-4">
-          Pracownik
+          Pracownicy
         </div>
 
         <div
           v-for="employee in employees"
           :key="employee.id"
-          class="flex justify-between items-center px-6 py-4 border-t border-gray-400">
+          class="flex justify-between items-center px-6 py-4 border-t border-gray-400"
+        >
           <div class="leading-tight">
             <p class="font-semibold">
-              {{ employee.firstName }} {{ employee.lastName }}
+              {{ employee.imie }} {{ employee.nazwisko }}
             </p>
             <p class="text-sm text-gray-700">
-              Numer ID: {{ employee.id }}
+              ID: {{ employee.id }}
             </p>
             <p
               class="text-sm font-semibold"
-              :class="employee.shift === 'Nocna'
-                ? 'text-red-600'
-                : 'text-green-600'">
-              Zmiana: {{ employee.shift }}
+              :class="employee.zmiana === 'Nocna' ? 'text-red-600' : 'text-green-600'">
+              Zmiana: {{ employee.zmiana }}
             </p>
           </div>
 
           <button
-            class="w-9 h-9 bg-sky-400 text-blue-400 rounded-lg flex items-center justify-center font-bold text-lg">
+            class="w-9 h-9 bg-sky-400 text-blue-400 rounded-lg flex items-center justify-center font-bold text-lg"
+            @click="viewDetails(employee.id)"
+          >
             i
           </button>
         </div>
+
+        <p v-if="loading" class="text-center py-4">Ładowanie...</p>
+        <p v-if="error" class="text-center py-4 text-red-500">{{ error }}</p>
 
       </div>
     </main>
@@ -39,17 +43,42 @@
 </template>
 
 <script>
+import api from "@/api/axios";
+
 export default {
   name: "EmployeesView",
   data() {
     return {
-      employees: [
-        { id: 201, firstName: "Adam", lastName: "Mazur", shift: "Dzienna" },
-        { id: 202, firstName: "Karolina", lastName: "Lewandowska", shift: "Nocna" },
-        { id: 203, firstName: "Tomasz", lastName: "Zieliński", shift: "Dzienna" },
-        { id: 204, firstName: "Natalia", lastName: "Kamińska", shift: "Nocna" },
-      ],
+      employees: [],
+      loading: false,
+      error: "",
     };
+  },
+  async mounted() {
+    await this.fetchEmployees();
+  },
+  methods: {
+    async fetchEmployees() {
+      this.loading = true;
+      this.error = "";
+
+      try {
+        const response = await api.get("/api/users");
+        this.employees = response.data;
+      } catch (err) {
+        if (err.response?.status === 401) {
+          this.error = "Brak autoryzacji – zaloguj się ponownie";
+          this.$router.push("/login");
+        } else {
+          this.error = "Nie udało się pobrać pracowników";
+        }
+      } finally {
+        this.loading = false;
+      }
+    },
+    viewDetails(id) {
+      this.$router.push(`/employees/${id}`);
+    },
   },
 };
 </script>

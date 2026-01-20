@@ -26,15 +26,18 @@
 
       <button
         type="submit"
-        class="w-full bg-purple-500 text-purple-400 py-2 rounded hover:bg-purple-600"
+        class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600"
+        :disabled="loading"
       >
-        Zaloguj się
+        {{ loading ? "Logowanie..." : "Zaloguj się" }}
       </button>
     </form>
   </div>
 </template>
 
 <script>
+import api from "@/api/axios";
+
 export default {
   name: "LoginView",
   data() {
@@ -42,10 +45,11 @@ export default {
       email: "",
       password: "",
       error: "",
+      loading: false,
     };
   },
   methods: {
-    login() {
+    async login() {
       this.error = "";
 
       if (!this.email || !this.password) {
@@ -53,11 +57,29 @@ export default {
         return;
       }
 
-      if (this.email === "admin@test" && this.password === "1234") {
-        localStorage.setItem("isLoggedIn", "true");
+      this.loading = true;
+
+      try {
+        const response = await api.post("/api/auth/login", {
+          email: this.email,
+          haslo: this.password, // UWAGA: haslo, nie password
+        });
+
+        const token = response.data.token;
+
+        // zapis JWT
+        localStorage.setItem("token", token);
+
+        // przekierowanie (np. panel admina / welcome)
         this.$router.push("/welcome");
-      } else {
-        this.error = "Nieprawidłowy email lub hasło";
+      } catch (err) {
+        if (err.response && err.response.status === 401) {
+          this.error = "Nieprawidłowy email lub hasło";
+        } else {
+          this.error = "Błąd połączenia z serwerem";
+        }
+      } finally {
+        this.loading = false;
       }
     },
   },

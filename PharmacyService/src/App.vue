@@ -1,23 +1,40 @@
-    <script>
-    export default {
-      name: "HomeView",
-    };
-    </script>
-    
 <template>
   <div class="min-h-screen bg-gray-100 flex flex-col w-full">
     <nav class="bg-purple-200 p-4 flex w-full justify-between items-center">
       <div class="flex space-x-4">
-        <button class="font-semibold">Leki</button>
-        <button class="font-semibold">Faktury</button>
-        <button class="font-semibold">Klienci</button>
+        <RouterLink
+          to="/medicines"
+          class="font-semibold hover:underline"
+        >Leki</RouterLink>
+        <RouterLink
+          to="/invoice"
+          class="font-semibold hover:underline"
+        >Faktury</RouterLink>
+        <RouterLink
+          to="/clients"
+          class="font-semibold hover:underline"
+        >Klienci</RouterLink>
+        <RouterLink
+          to="/employees"
+          class="font-semibold hover:underline"
+        >Pracownicy</RouterLink>
       </div>
-      <button class="font-semibold">Wyloguj się</button>
+
+      <button
+        class="font-semibold hover:underline"
+        @click="logout"
+      >
+        Wyloguj się
+      </button>
     </nav>
-    
-    <div><RouterView /></div>
+
+    <!-- Główna zawartość -->
+    <div class="flex-1">
+      <RouterView />
+    </div>
+
+    <!-- do testowania -->
     <div class="fixed left-0 bottom-0">
-      <!-- do testowania -->
       <RouterLink to="/">Home&nbsp;</RouterLink>
       <RouterLink to="/login">Login&nbsp;</RouterLink>
       <RouterLink to="/welcome">Welcome&nbsp;</RouterLink>
@@ -28,3 +45,15 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: "HomeView",
+  methods: {
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push("/login");
+    },
+  },
+};
+</script>

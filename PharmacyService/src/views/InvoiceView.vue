@@ -1,9 +1,8 @@
 <template>
   <div class="min-h-screen w-screen bg-white flex flex-col">
-    
     <main class="flex-1 flex justify-center items-start pt-16">
       <div class="w-full max-w-md border border-gray-400 rounded-xl overflow-hidden shadow-md">
-        
+
         <div class="bg-purple-300 text-white text-center text-xl font-bold py-4">
           Faktury
         </div>
@@ -11,17 +10,30 @@
         <div
           v-for="invoice in invoices"
           :key="invoice.id"
-          class="flex items-center justify-between px-6 py-4 border-t border-gray-400">
+          class="flex items-center justify-between px-6 py-4 border-t border-gray-400"
+        >
           <div>
-            <p class="font-semibold">Faktura {{ invoice.id }}</p>
-            <p class="text-sm text-gray-700">Data zakupu: {{ invoice.date }}</p>
+            <p class="font-semibold">
+              {{ invoice.nr_faktury }}
+            </p>
+            <p class="text-sm text-gray-700">
+              Data: {{ formatDate(invoice.data_wystawienia) }}
+            </p>
+            <p class="text-sm text-gray-600">
+              Lek: {{ invoice.lek.nazwa }}
+            </p>
           </div>
 
           <button
-            class="w-8 h-8 bg-sky-400 text-blue-400 rounded-lg flex items-center justify-center font-bold">
+            class="w-8 h-8 bg-sky-400 text-blue-400 rounded-lg flex items-center justify-center font-bold"
+            @click="openDetails(invoice.id)"
+          >
             i
           </button>
         </div>
+
+        <p v-if="loading" class="text-center py-4">Ładowanie...</p>
+        <p v-if="error" class="text-center py-4 text-red-500">{{ error }}</p>
 
       </div>
     </main>
@@ -29,18 +41,45 @@
 </template>
 
 <script>
+import api from "@/api/axios";
+
 export default {
   name: "InvoiceView",
   data() {
     return {
-      invoices: [
-        { id: 1, date: "10.10.2025" },
-        { id: 2, date: "11.10.2025" },
-        { id: 3, date: "12.10.2025" },
-        { id: 4, date: "13.10.2025" },
-        { id: 5, date: "14.10.2025" },
-      ],
+      invoices: [],
+      loading: false,
+      error: "",
     };
+  },
+  async mounted() {
+    await this.fetchInvoices();
+  },
+  methods: {
+    async fetchInvoices() {
+      this.loading = true;
+      this.error = "";
+
+      try {
+        const response = await api.get("/api/faktury");
+        this.invoices = response.data;
+      } catch (err) {
+        if (err.response?.status === 401) {
+          this.error = "Brak autoryzacji – zaloguj się ponownie";
+          this.$router.push("/login");
+        } else {
+          this.error = "Nie udało się pobrać faktur";
+        }
+      } finally {
+        this.loading = false;
+      }
+    },
+    formatDate(date) {
+      return new Date(date).toLocaleDateString("pl-PL");
+    },
+    openDetails(id) {
+      this.$router.push(`/invoice/${id}`);
+    },
   },
 };
 </script>
