@@ -3,9 +3,13 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import WelcomeView from '../views/WelcomeView.vue'
 import InvoiceView from '../views/InvoiceView.vue'
+import InvoiceDetailView from '../views/InvoiceDetailView.vue'
 import ClientsView from '../views/ClientsView.vue'
+import ClientDetailView from '../views/ClientDetailView.vue'
 import EmployeesView from '../views/EmployeesView.vue'
+import EmployeeDetailView from '../views/EmployeeDetailView.vue'
 import MedicinesView from '../views/MedicinesView.vue'
+import MedicineDetailView from '../views/MedicineDetailView.vue'
 import DeniedAccessView from '../views/DeniedAccessView.vue'
 
 const routes = [
@@ -13,9 +17,13 @@ const routes = [
   { path: '/login', name: 'Login', component: LoginView },
   { path: '/welcome', name: 'Welcome', component: WelcomeView },
   { path: '/invoice', name: 'Invoice', component: InvoiceView },
+  { path: '/invoice/:id', name: 'InvoiceDetail', component: InvoiceDetailView },
   { path: '/clients', name: 'Clients', component: ClientsView },
+  { path: '/clients/:id', name: 'ClientDetail', component: ClientDetailView },
   { path: '/employees', name: 'Employees', component: EmployeesView, meta: { requiresAdmin: true } },
+  { path: '/employees/:id', name: 'EmployeeDetail', component: EmployeeDetailView, meta: { requiresAdmin: true } },
   { path: '/medicines', name: 'Medicines', component: MedicinesView },
+  { path: '/medicines/:id', name: 'MedicineDetail', component: MedicineDetailView },
   { path: '/denied', name: 'Denied', component: DeniedAccessView },
 ]
 
