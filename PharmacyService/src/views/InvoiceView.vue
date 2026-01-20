@@ -25,7 +25,7 @@
           </div>
 
           <button
-            class="w-8 h-8 bg-sky-400 text-blue-400 rounded-lg flex items-center justify-center font-bold"
+            class="w-9 h-9 bg-sky-400 text-white hover:bg-sky-600 transition rounded-lg flex items-center justify-center font-bold text-lg"
             @click="openDetails(invoice.id)"
           >
             i

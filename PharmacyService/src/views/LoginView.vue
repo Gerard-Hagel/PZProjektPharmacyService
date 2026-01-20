@@ -62,15 +62,13 @@ export default {
       try {
         const response = await api.post("/api/auth/login", {
           email: this.email,
-          haslo: this.password, // UWAGA: haslo, nie password
+          haslo: this.password,
         });
 
         const token = response.data.token;
 
-        // zapis JWT
         localStorage.setItem("token", token);
 
-        // przekierowanie (np. panel admina / welcome)
         this.$router.push("/welcome");
       } catch (err) {
         if (err.response && err.response.status === 401) {

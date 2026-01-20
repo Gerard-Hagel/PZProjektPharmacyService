@@ -1,34 +1,16 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex flex-col w-full">
     <nav class="bg-purple-200 p-4 flex w-full justify-between items-center">
-      <div class="flex space-x-4">
-        <RouterLink
-          to="/medicines"
-          class="font-semibold hover:underline"
-        >Leki</RouterLink>
-        <RouterLink
-          to="/invoice"
-          class="font-semibold hover:underline"
-        >Faktury</RouterLink>
-        <RouterLink
-          to="/clients"
-          class="font-semibold hover:underline"
-        >Klienci</RouterLink>
-        <RouterLink
-          to="/employees"
-          class="font-semibold hover:underline"
-        >Pracownicy</RouterLink>
-      </div>
+  <div class="flex space-x-4">
+    <RouterLink to="/medicines" class="px-4 py-2 bg-white text-black border hover:bg-gray-100 transition rounded-lg flex items-center justify-center font-bold text-lg">Leki</RouterLink>
+    <RouterLink to="/invoice" class="px-4 py-2 bg-white text-black border hover:bg-gray-100 transition rounded-lg flex items-center justify-center font-bold text-lg">Faktury</RouterLink>
+    <RouterLink to="/clients" class="px-4 py-2 bg-white text-black border hover:bg-gray-100 transition rounded-lg flex items-center justify-center font-bold text-lg">Klienci</RouterLink>
+    <RouterLink to="/employees"class="px-4 py-2 bg-white text-black border hover:bg-gray-100 transition rounded-lg flex items-center justify-center font-bold text-lg">Pracownicy</RouterLink>
+  </div>
 
-      <button
-        class="font-semibold hover:underline"
-        @click="logout"
-      >
-        Wyloguj się
-      </button>
-    </nav>
+  <button class="px-4 py-2 bg-white text-black border hover:bg-gray-100 transition rounded-lg flex items-center justify-center font-bold text-lg" @click="logout">Wyloguj się</button>
+</nav>
 
-    <!-- Główna zawartość -->
     <div class="flex-1">
       <RouterView />
     </div>
@@ -42,6 +24,7 @@
       <RouterLink to="/clients">Clients&nbsp;</RouterLink>
       <RouterLink to="/employees">Employees&nbsp;</RouterLink>
       <RouterLink to="/medicines">Medicines&nbsp;</RouterLink>
+      <RouterLink to="/denied">DeniedAccess&nbsp;</RouterLink>
     </div>
   </div>
 </template>

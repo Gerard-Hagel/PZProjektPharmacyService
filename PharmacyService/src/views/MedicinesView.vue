@@ -29,20 +29,20 @@
           <div class="flex space-x-3">
             <button
               @click="increase(medicine)"
-              class="w-9 h-9 bg-green-400 text-green-400 rounded-lg flex items-center justify-center text-xl font-bold"
+              class="w-9 h-9 bg-green-400 text-white hover:bg-green-600 transition rounded-lg flex items-center justify-center font-bold text-lg"
             >
               +
             </button>
 
             <button
               @click="decrease(medicine)"
-              class="w-9 h-9 bg-red-400 text-red-400 rounded-lg flex items-center justify-center text-xl font-bold"
+              class="w-9 h-9 bg-red-400 text-white hover:bg-red-600 transition rounded-lg flex items-center justify-center font-bold text-lg"
             >
               -
             </button>
 
             <button
-              class="w-9 h-9 bg-sky-400 text-blue-400 rounded-lg flex items-center justify-center font-bold text-lg"
+              class="w-9 h-9 bg-sky-400 text-white hover:bg-sky-600 transition rounded-lg flex items-center justify-center font-bold text-lg"
               @click="viewDetails(medicine.id)"
             >
               i
